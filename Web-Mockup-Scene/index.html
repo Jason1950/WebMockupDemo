@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- jQuery lib -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- icon link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- Step3 css -->
+    <link rel="stylesheet" href="./css/main3.css">
+
+    <script type="text/javascript" src="./jsm/greensock/TweenMax.min.js"></script>
+    <style>
+        #fly-div{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 第三區塊 -->
+    <div class="main3">
+        <div id="main3-tilte">  </div>
+        <div id="main3-block">
+            <div id="main3-title">Please interactive with your avatar </div>
+            <canvas id="main3-canvas" style="width:50%" ></canvas>
+            <!-- <div id="main3-return">return</div> -->
+            <button id="main3-btn1-return" ><i class="fa fa-upload" style="font-size: 22px;"></i> Down</button>
+            <button id="main3-btn2-back" ><i class="fa fa-upload" style="font-size: 22px;"></i> Back</button>
+            
+            <img id="main3-qrcode" src="./pics/qrcode.png" />
+            <!-- <button id="main3-btn1-return" onclick="main3ButtnClick()"><i class="fa fa-upload" style="font-size: 22px;"></i> Upload</button> -->
+            <div id="fly-div">false</div>
+        </div>    
+    </div>
+
+</body>
+<script src="sceneJS.js" type="module" ></script>
+<script>
+    let stateMain3 = false;
+
+    // function main3ButtnClick (){
+    //     // let content = $("#fly-div").html()
+    //     // var isTrueSet = (content === 'true');
+    //     // $("#fly-div").html('true');
+        
+    //     // console.log('no function !',(content === 'true'));
+    //     // console.log('no function !',Boolean(parseInt(content)));
+    // }
+
+    // **********************
+    //        n o w
+    // **********************
+    // $(".main5").hide();
+    // $(".fade4").hide();
+    // $(".main3").hide();
+    // $(".main2").hide();
+    // $(".main1").hide();
+    // $('.main1').delay(3000).fadeOut(400)
+    // $('.main2').delay(3000).fadeIn(400)
+    
+</script>
+
+</html>
