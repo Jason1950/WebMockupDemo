@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- jQuery lib -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- icon link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- Step1 css -->
+    <link rel="stylesheet" href="./css/main1.css">
+
+    <!-- Step2 css -->
+    <link rel="stylesheet" href="./css/main2.css">
+
+    <!-- Step3 css -->
+    <link rel="stylesheet" href="./css/main3.css">
+
+    <!-- Step fade css -->
+    <link rel="stylesheet" href="./css/fade4.css">
+
+    <!-- Step fade css -->
+    <link rel="stylesheet" href="./css/main5.css">
+    <script type="text/javascript" src="./shake-iospermission.js"></script>
+    <script type="text/javascript" src="./shake.js"></script>
+</head>
+<body>
+
+    <!-- 第一區塊 -->
+    <div class="main1">
+        <div id="main1-tilte"> 故宮Demo </div>
+        <span class="loader"><span class="loader-inner"></span></span>
+        <div class="loader-text">L o a d i n g . . .</div>
+    </div>
+
+    <!-- 第二區塊 -->
+    <div class="main2">
+        <div id="main2-tilte">故宮Demo</div>
+        <div id="main2-text1"> Step.1 蒐集場域素材 ! </div>
+        <div id="main2-text2"> Step.2 彩繪數位分身衣服特徵 ! </div>
+        <div id="main2-text3"> Step.3 上傳至場域作品內 ! </div>
+        <!-- <img id="main2-img1" src="./pics/make-removebg.png"  alt="tpose"> -->
+        <img id="main2-img2" src="./pics/model.jpg"  alt="tpose">
+        <button id="main2-btn1" onclick="main2ButtnClick()"><img src="./pics/make-removebg2.png" id="main2-btn-img"></i> 　開始製作數位分身</button>
+    </div>
+    <!-- i class="fa fa-camera"></i -->
+    
+
+    <!-- 第三區塊 -->
+    <div class="main3">
+        <div id="main3-block">
+            <div id="main3-title">Please shake your phone to animate the avatar </div>
+            <canvas id="main3-canvas" style="width:50%" ></canvas>
+            <!-- <div id="main3-return">return</div> -->
+            <button id="main3-btn1-return" onclick="main3ButtnClick()"><i class="fa fa-upload" style="font-size: 22px;"></i> Upload</button>
+            <button id="main3-btn1-search" onclick="main3ButtnClick()"><i class="fa fa-search-plus" style="font-size: 22px;"></i> Collect</button>
+            <button id="main3-btn1-pain" onclick="main3ButtnClick()"><i class="fa fa-paint-brush" style="font-size: 22px;"></i> custom</br>made</button>
+            
+            <!-- <button id="main3-btn1-return" onclick="main3ButtnClick()"><i class="fa fa-upload" style="font-size: 22px;"></i> Upload</button> -->
+        </div>    
+    </div>
+
+    <!-- 第四區塊 過場 -->
+    <div class="fade4"> 
+        <h1 id="fade4-title" >SHAKE IT ! !</h1>
+        <div id="fade4-block">
+            <img id="fade4-shake" src="https://cdn-icons-png.flaticon.com/512/1527/1527496.png">
+        </div>
+    </div>
+
+    <!-- 第五區塊 結尾 -->
+    <div class="main5">
+        <div id="main5-tilte"> 故宮Demo </div>
+        <div id="main5-tilte2"> Upload Successfully ! </div>
+        <div>
+            <p id="main5-p1">
+                國立故宮博物院110 年度施政計畫，數位互動博物館技術建置，場域體驗ITRI合作展示DEMO
+                <a href="https://www.npm.gov.tw/" target="_blank" rel="noopener">www.npm.gov.tw/</a>
+            </p>
+        </div>
+        
+        <div id="main5-footer">
+            <div id="main5-footer-block">
+                <img src="./pics/ntm-removebg.png" style="width: 40px;" />國立故宮博物院著作權所有
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="webglJS.js" type="module" ></script>
+<script>
+    let stateMain3 = false;
+
+    let ws = new WebSocket("wss://itri-router-sstc.ngrok.io");
+    ws.onopen = () => {
+        console.log("open connection");
+    };
+    ws.onclose = () => {
+        console.log("close connection");
+    };
+    // ws.onmessage = (event) => {
+    //     if(event.data=='action') flyState = true;
+    // };
+
+    function main2ButtnClick (){
+        ios13granted();
+        $('.main2').delay(300).fadeOut(400);
+        $('.main1').delay(300).fadeIn(400);
+
+        $('.main1').delay(4500).fadeOut(400);
+        $('.main3').delay(4500).fadeIn(400);
+        $('.fade4').delay(4500).fadeIn(400);
+        $('.fade4').delay(4800).fadeOut(400);
+        // setTimeout(function(){ stateMain3 = true; }, 3000);
+        // setTimeout(function(){ stateMain3 = false; }, 4500);
+
+        ws.send('back');
+        
+    }
+
+    function main3ButtnClick (){
+        
+        $('.main3').delay(300).fadeOut(400);
+        $('.main1').delay(300).fadeIn(400);
+
+        $('.main1').delay(3000).fadeOut(400);
+        $('.main5').delay(3000).fadeIn(400);
+
+
+        setTimeout(function() {
+        //your code to be executed after 1 second
+            ws.send('action');
+        }, 3000)
+
+
+    }
+
+    // if (is_touch_device()  && stateMain3) {
+    //     $('.fade4').hide();
+    // }
+
+    // **********************
+    //        n o w
+    // **********************
+    $(".main5").hide();
+    $(".fade4").hide();
+    $(".main3").hide();
+    $(".main2").hide();
+    // $(".main1").hide();
+    
+    $('.main1').delay(5000).fadeOut(400)
+    $('.main3').delay(5000).fadeIn(400)
+    
+
+
+
+
+    // var ts;
+    // $(document).bind('touchstart', function (e){
+    // ts = e.originalEvent.touches[0].clientY;
+    // });
+
+    // $(document).bind('touchend', function (e){
+    // var te = e.originalEvent.changedTouches[0].clientY;
+    // if(ts > te+5){
+    //     slide_down();
+    // }else if(ts < te-5){
+    //     slide_up();
+    // }
+    // });
+    // let startX = startY = endX =endY =0;
+
+
+    // ontouchmove="myFunction(event)"
+    // function myFunction(event) {
+    //     var x = event.touches[0].clientX;
+    //     var y = event.touches[0].clientY;
+    //     document.getElementById("main3-title").innerHTML = x + ", " + y;
+        
+    // }
+    
+    
+    
+</script>
+
+<!-- window.onload=function(){
+    if (is_touch_device()){
+      var divs=document.getElementsByClassName( 'yourclassname');
+      for (var i=0; i<divs.length; i++)
+        divs[i].style.display='none'; 
+    }
+  } -->
+</html>
