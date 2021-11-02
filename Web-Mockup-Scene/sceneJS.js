@@ -208,7 +208,8 @@
         group.name = "groupMan";
         scene.add( group );
 
-
+        let objman222 = scene.getObjectByName( "groupMan" );
+        objman222.position.x = -110;
 
 
 
@@ -248,8 +249,11 @@
 
         let objman = scene.getObjectByName( "groupWoman" );
         objman.position.x = 110;
-
+        //暫時用
+        objman.position.y -= 555;
         scene.position.y -= 55;
+        
+        
         console.log(scene);
         
         // ---------------- 綁定 canvas 為 自己指定的element !! --------------- //
@@ -328,6 +332,7 @@
             // ******* s = 83 ********* //
             // animationPlay(action, 'hello');
             walkGoOutTest('right');
+            walkGoOutTest2('right');
 
         } else if(keyCode == 65){
             // ******* A = 65 ********* //
@@ -409,7 +414,60 @@
                             w_action.play();
             
                         },action3._clip.duration*1000);
-                    },action3._clip.duration*1000-10);
+                    },action3._clip.duration*1000-20);
+
+
+                },2000);
+
+            },action2._clip.duration*1000-10)
+        },action2._clip.duration*1000-10)
+    }
+
+
+    function walkGoOutTest2(name){
+        const fSpeed = 0.08, tSpeed = 0.5;
+        let object3DWoman = scene.getObjectByName( "groupWoman" );
+        let object3DMan = scene.getObjectByName( "groupMan" );
+        // console.log(animationArray);
+        let action2 = mixer.clipAction( animationArray.find(item=>item.name==name) );
+        // action2.setLoop(THREE.LoopOnce);
+        action2.reset();
+        action.reset();
+        action2.play();
+        // console.log(action2.isRunning());
+        action.crossFadeTo(action2, fSpeed, false);
+        setTimeout(function() {
+            object3DMan.position.x += object3DMan.children[0].position.x;
+            setTimeout(function() {
+                object3DMan.position.x += object3DMan.children[0].position.x;
+                action2.enabled = false;
+                action2.crossFadeTo(action, tSpeed, false);
+                console.log('woman play ...');
+                action.reset();
+                action.play();
+
+                // *** go back *** //
+                setTimeout(function(){
+                    let action3 = w_mixer.clipAction( animationArray.find(item=>item.name=='left') );
+                    // action2.setLoop(THREE.LoopOnce);
+                    action3.reset();
+                    action3.play();
+                    // console.log(action2.isRunning());
+                    action.crossFadeTo(action3, fSpeed, false);
+                    setTimeout(function() {
+                        object3DMan.position.x += object3DMan.children[0].position.x;
+                    
+                        setTimeout(function() {
+                            object3DMan.position.x += object3DMan.children[0].position.x;
+                        
+                            action3.enabled = false;
+                            action3.crossFadeTo(action, tSpeed, false);
+                            console.log('woman play ...');
+                            action.reset();
+                            action.play();
+            
+                        },action3._clip.duration*1000);
+                    },action3._clip.duration*1000-20);
 
 
                 },2000);
