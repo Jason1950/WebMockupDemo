@@ -46,6 +46,11 @@
         animationArray.push( object.animations[ 0 ]);            
     } );
 
+    loader.load( './3dfile/man_rokoko_test01.fbx', function ( object ) {
+        object.animations[ 0 ].name ="rokoko01";
+        animationArray.push( object.animations[ 0 ]);            
+    } );
+
     loader.load( './3dfile/man_Idle.fbx', function ( object ) {
         object.animations[ 0 ].name ="idle";
         animationArray.push( object.animations[ 0 ]);     
@@ -316,7 +321,8 @@
 
         } else if (keyCode == 86) {
             // ******* v = 86 ********* //
-            animationPlay(action, 'hello');
+            animationPlay(action, 'rokoko01');
+            // animationPlay(action, 'hello');
 
         } else if (keyCode == 83) {
             // ******* s = 83 ********* //
