@@ -208,8 +208,8 @@
         group.name = "groupMan";
         scene.add( group );
 
-        let objman222 = scene.getObjectByName( "groupMan" );
-        objman222.position.x = -110;
+        // let objman222 = scene.getObjectByName( "groupMan" );
+        // objman222.position.x = -110;
 
 
 
@@ -250,7 +250,7 @@
         let objman = scene.getObjectByName( "groupWoman" );
         objman.position.x = 110;
         //暫時用
-        objman.position.y -= 555;
+        // objman.position.y -= 555;
         scene.position.y -= 55;
         
         
