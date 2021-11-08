@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <!-- jQuery lib -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- icon link -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- Step3 css -->
+    <link rel="stylesheet" href="./css/main3.css" />
+
+    <script
+      type="text/javascript"
+      src="./jsm/greensock/TweenMax.min.js"
+    ></script>
+    <style>
+      #fly-div {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 第三區塊 -->
+    <div class="main3">
+      <div id="main3-tilte"></div>
+      <div id="main3-block">
+        <div id="main3-title">Please interactive with your avatar</div>
+        <canvas
+          id="main3-canvas"
+          style="width: 50%; position: absolute; left: 0; top: 0"
+        ></canvas>
+        <!-- <div id="main3-return">return</div> -->
+        <button id="main3-btn1-return">
+          <i class="fa fa-upload" style="font-size: 22px"></i> Down
+        </button>
+        <button id="main3-btn2-back">
+          <i class="fa fa-upload" style="font-size: 22px"></i> Back
+        </button>
+
+        <img id="main3-qrcode" src="./pics/qrcode.png" />
+        <!-- <button id="main3-btn1-return" onclick="main3ButtnClick()"><i class="fa fa-upload" style="font-size: 22px;"></i> Upload</button> -->
+        <div id="fly-div">false</div>
+      </div>
+    </div>
+    <div
+      id="notebook-info"
+      style="
+        border: solid 1.5px black;
+        padding: 10px;
+        position: absolute;
+
+        z-index: 1;
+        width: 50%;
+        left: 50%;
+        top: 20%;
+        text-align: justify;
+        transform: translate(-50%, 0%);
+      "
+    >
+      International Business Machines Corporation (IBM) is an American
+      multinational technology corporation headquartered in Armonk, New York,
+      with operations in over 171 countries. The company began in 1911, founded
+      in Endicott, New York by trust businessman Charles Ranlett Flint, as the
+      Computing-Tabulating-Recording Company (CTR) and was renamed
+      "International Business Machines" in 1924. IBM is incorporated in New
+      York.[4]
+    </div>
+    <div
+      id="close-div"
+      style="
+        width: 10px;
+        height: 10px;
+        display: flex;
+        align-items: center;
+        border-radius: 100%;
+        border: solid 3px black;
+        font-weight: 700;
+        padding: 10px;
+        position: absolute;
+
+        z-index: 1;
+        //width: 50%;
+        left: 50%;
+        top: 15%;
+        text-align: justify;
+        transform: translate(-50%, -50%);
+      "
+    >
+      X
+    </div>
+
+    <div
+      id="rock-info"
+      style="
+        border: solid 1.5px black;
+        padding: 10px;
+        position: absolute;
+
+        z-index: 1;
+        width: 50%;
+        left: 50%;
+        top: 20%;
+        text-align: justify;
+        transform: translate(-50%, 0%);
+      "
+    >
+      American rock has its roots in 1940s and 1950s rock and roll, rhythm and
+      blues, and country music, and also drew on folk music, jazz, blues, and
+      classical music. American rock music was further influenced by the British
+      Invasion of the American pop charts from 1964 and resulted in the
+      development of psychedelic rock. From the late 1960s and early 1970s,
+      American rock music was highly influential in the development of a number
+      of fusions, including blending with folk music to create folk rock, with
+      blues to create blues rock, with country music to create country rock,
+      roots rock and southern rock and with jazz to create jazz rock, all of
+      which contributed to psychedelic rock. In the 1970s, rock developed a
+      large number of subgenres, such as soft rock, hard rock, heavy metal, glam
+      rock, progressive rock and punk rock.
+    </div>
+  </body>
+  <script src="showJS.js" type="module"></script>
+  <script>
+    let stateMain3 = false;
+
+    // function main3ButtnClick (){
+    //     // let content = $("#fly-div").html()
+    //     // var isTrueSet = (content === 'true');
+    //     // $("#fly-div").html('true');
+
+    //     // console.log('no function !',(content === 'true'));
+    //     // console.log('no function !',Boolean(parseInt(content)));
+    // }
+
+    // **********************
+    //        n o w
+    // **********************
+    // $(".main5").hide();
+    // $(".fade4").hide();
+    // $(".main3").hide();
+    // $(".main2").hide();
+    // $(".main1").hide();
+    // $('.main1').delay(3000).fadeOut(400)
+    // $('.main2').delay(3000).fadeIn(400)
+  </script>
+</html>
