@@ -8,9 +8,11 @@
     let camera, scene, renderer;
     const clock = new THREE.Clock();
     let mixer;
+    let b_mixer;
     let w_mixer;
     let action;
     let w_action;
+    let b_action;
     let animationArray =[];
     var canvas;
     let controls;
@@ -38,6 +40,11 @@
     let modelLastPositionArray = [0,0];
     let currentlyAnimating = [false,false];
 
+    const loader = new FBXLoader();
+    loader.load( './3dfile/man_Idle.fbx', function ( object ) {
+        object.animations[ 0 ].name ="idle";
+        animationArray.push( object.animations[ 0 ]);     
+    } );
 
 
     init();
@@ -59,29 +66,6 @@
         scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
 
         
-        // Set background
-        // const canvasAspect = canvas.clientWidth / canvas.clientHeight;
-        // const imageAspect = bgTexture.image ? bgTexture.image.width / bgTexture.image.height : 1;
-        // const aspect = imageAspect / canvasAspect;
-        
-        // bgTexture.offset.x = aspect > 1 ? (1 - 1 / aspect) / 2 : 0;
-        // bgTexture.repeat.x = aspect > 1 ? 1 / aspect : 1;
-        
-        // bgTexture.offset.y = aspect > 1 ? 0 : (1 - aspect) / 2;
-        // bgTexture.repeat.y = aspect > 1 ? 1 : aspect;
-        // // scene.background = bgTexture;
-
-
-        
-        // let skyboxGeo = new THREE.BoxGeometry(2000, 900, 1000);
-        // skytexture = new THREE.MeshBasicMaterial(
-        //     {   map: bgTexture, 
-        //         side: THREE.BackSide,
-        //         transparent: true, 
-        //         opacity: 1 });
-        // let skybox = new THREE.Mesh(skyboxGeo, skytexture );
-        // skybox.name = "boxbg";
-        // scene.add(skybox);
 
         const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
         hemiLight.position.set( 0, 200, 0 );
@@ -96,43 +80,73 @@
         dirLight.shadow.camera.right = 120;
         scene.add( dirLight );
 
-        // scene.add( new THREE.CameraHelper( dirLight.shadow.camera ) );
-
-        // ground
-        // const mesh = new THREE.Mesh( new THREE.PlaneGeometry( 200, 200 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: true } ) );
         const mesh = new THREE.Mesh( new THREE.BoxGeometry( 50, 50 ,50), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: true } ) );
-        // const mesh = new THREE.Mesh( new THREE.BoxGeometry(2000, 150,5), new THREE.MeshPhongMaterial( {map: cushionsInit, shininess: 10 } ) );
         mesh.name = 'showcase';
-        // mesh.callback = function() { console.log( this.name ); }
-        mesh.position.y -= 25;
-
-        // mesh.rotation.x = - Math.PI / 2;
-        // mesh.receiveShadow = true;
-        // mesh.position.y -= 4;
+        mesh.position.y += 25;
         scene.add( mesh );
 
 
         const mesh2 = new THREE.Mesh( new THREE.BoxGeometry( 50, 50 ,50), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: true } ) );
         mesh2.name = 'showcase2';
-        mesh2.position.y -= 25;
+        mesh2.position.y += 25;
         mesh2.position.x += 100;
         scene.add( mesh2 );
 
 
-        const grid = new THREE.GridHelper( 200, 2, 0x000000, 0x000000 );
+        const grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
         grid.material.opacity = 0.2;
         grid.material.transparent = true;
-        // scene.add( grid );
+        scene.add( grid );
 
         
         const group = new THREE.Group();
         const group2 = new THREE.Group();
         const group3 = new THREE.Group();
+        const group4 = new THREE.Group();
 
-        // const manager = new THREE.LoadingManager();
-        // manager.addHandler( /\.tga$/i, new TGALoader() );
         
-        const loader = new FBXLoader();
+        loader.load( './3dfile/man.fbx', function ( object ) {
+            // **** texture loading **** //
+            const man_txt = new THREE.TextureLoader().load('./pics/man.jpg');
+            man_txt.flipY = true; // we flip the texture so that its the right way up
+            const man_mtl = new THREE.MeshPhongMaterial({
+                map: man_txt,
+                color: 0xffffff,
+                skinning: true
+            });
+
+            mixer = new THREE.AnimationMixer( object );
+            // action = mixer.clipAction( object.animations[0] );
+            console.log(animationArray);
+            action = mixer.clipAction( animationArray.find(item=>item.name=='idle') );
+            console.log('action : ', action);
+            
+            action.play();
+            object.traverse( function ( child ) {
+                if ( child.isMesh ) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                    child.material = man_mtl;
+                }
+            } );
+            object.scale.multiplyScalar(0.65); 
+            
+            console.log(object.name);
+            // scene.add( object );
+            group.add( object );
+        } );
+
+
+        group.name = "groupMan";
+        scene.add( group );
+
+        let tempObject2 = scene.getObjectByName( "groupMan" );
+        tempObject2.position.z += 130;
+        tempObject2.position.x -= 50;
+
+
+
+
         loader.load( './3dfile/Lowpoly_Notebook_2.fbx', function ( object ) {
 
             const txt = new THREE.TextureLoader().load('./3dfile/textures/Lowpoly_Laptop_2.jpg');
@@ -142,11 +156,6 @@
                 color: 0xffffff,
                 skinning: true
             });
-            // console.log(object.name);
-            // w_mixer = new THREE.AnimationMixer( object );
-            // // action = mixer.clipAction( object.animations[0] );
-            // w_action = w_mixer.clipAction( animationArray.find(item=>item.name=='w_idle') );
-            // w_action.play();
             object.traverse( function ( child ) {
 
                 if ( child.isMesh ) {
@@ -158,7 +167,7 @@
             } );
             object.scale.multiplyScalar(0.1); 
             object.rotation.y = Math.PI / 2;
-            object.position.y += 5;
+            object.position.y += 55;
             object.name = 'notebook'
             console.log('object.name :',object.name);
             group2.add(object);
@@ -179,11 +188,6 @@
                 color: 0xffffff,
                 skinning: true
             });
-            // console.log(object.name);
-            // w_mixer = new THREE.AnimationMixer( object );
-            // // action = mixer.clipAction( object.animations[0] );
-            // w_action = w_mixer.clipAction( animationArray.find(item=>item.name=='w_idle') );
-            // w_action.play();
             object.traverse( function ( child ) {
 
                 if ( child.isMesh ) {
@@ -193,16 +197,15 @@
                     child.material = mtl;
                 }
             } );
-            // object.scale.multiplyScalar(0.1); 
             object.scale.multiplyScalar(0.1); 
 
             object.rotation.y = Math.PI / 2;
-            object.position.y += 5;
+            object.position.y += 55;
             object.position.x += 100;
             object.name = 'rock-inside'
             console.log('object.name :',object.name);
             group3.add(object);
-            // scene.add( object );
+
         } );
 
         group3.name = 'rock'
@@ -214,6 +217,40 @@
         console.log(tempObject.children[0]);
 
 
+        loader.load( './3dfile/Balus02.fbx', function ( object ) {
+
+
+            b_mixer = new THREE.AnimationMixer( object );
+            console.log('b_mixer : ', b_mixer);
+            b_action = b_mixer.clipAction( object.animations[0] );
+            // b_action = b_mixer.clipAction( animationArray.find(item=>item.name=='idle')  );
+            console.log('b_action : ', b_action);
+            console.log(' object.animations[0]: ',  object.animations)
+            b_action._loopCount=1;
+            // b_action.time=0.5;
+            // b_action.timeScale *=500000;
+            b_action.play();
+            object.traverse( function ( child ) {
+                if ( child.isMesh ) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                    // child.material = man_mtl;
+                }
+            } );
+            object.scale.multiplyScalar(0.65);    
+            console.log(object.name);
+
+            group4.add( object );
+        } );
+
+        // group.rotation.x = 4.3;
+        // group.position.y += 330;//2.5*50;
+        group4.name = "bailu1";
+        scene.add( group4 );
+
+        let tempObjectBalus = scene.getObjectByName( "bailu1" );
+        // tempObject2.position.z += 130;
+        tempObjectBalus.position.y += 200;
 
 
 
@@ -259,18 +296,54 @@
     }
 
     function animate() {
-
+        
         notebookState = false;
+        moveMouseDisplay()
+
 
         let tempObject = scene.getObjectByName( "notebook" );
-        if(tempObject) tempObject.rotation.y -= 0.01;
+        
+        if(tempObject) {
+            // if(tempObject.children[0]) console.log(tempObject.children[0].position)
+            tempObject.rotation.y -= 0.01;}
 
         let tempObject2 = scene.getObjectByName( "rock" );
         if(tempObject2.children[0]) tempObject2.children[0].rotation.y -= 0.01;
         // console.log('123')
 
-        moveMouseDisplay()
+        let tempObjectMan = scene.getObjectByName( "groupMan" );
+        // if(tempObjectMan.children[0]) console.log(tempObjectMan.position)
+        if(tempObjectMan && tempObject.children[0]){
+            const dep = distanceCal(tempObjectMan,tempObject.children[0]);
+            // console.log('dep : ',dep);
+            if (dep<65){
+                $("#notebook-info").css( { display: "block" } );
+                $("#close-div").css( { display: "flex" } );
+            }
+        }
+
+        if(tempObjectMan && tempObject2.children[0]){
+            const dep = distanceCal(tempObjectMan,tempObject2.children[0]);
+            // console.log('dep : ',dep);
+            if (dep<65){
+                $("#rock-info").css( { display: "block" } );
+                $("#close-div").css( { display: "flex" } );
+            }
+        }
+
         const delta = clock.getDelta();
+        const delta2 = clock.getDelta();
+        if ( mixer ) {
+            // console.log('mixer : ', mixer);
+            mixer.update( delta );}
+        if (b_mixer) {
+            // console.log('b_mixer',b_mixer);
+            b_mixer.update( delta2 *3000);
+            // b_action.pause();
+            // console.log('delta20', delta2);
+            // console.log('b_action : ', b_action);
+
+        }
         requestAnimationFrame( animate );
         renderer.render( scene, camera );
     }
@@ -283,39 +356,14 @@
     }); 
 
 
-    
+    function distanceCal(objectA,objectB){
+        // objectA.position.x - objectB.position.x
+        const p1 = objectA.position;
+        const p2 = objectB.position;
+        let dep = Math.sqrt(Math.pow((p1.x - p2.x), 2) + Math.pow((p1.z - p2.z), 2));
+        return dep;
 
-    // function onDocumentMouseDown( e ) {
-    //     e.preventDefault();
-    //     var mouseVector = new THREE.Vector3();
-    //     mouseVector.x = 2 * (e.clientX / window.innerWidth) - 1;
-    //     mouseVector.y = 1 - 2 * ( e.clientY / window.innerHeight );
-    //     var raycaster = projector.pickingRay( mouseVector.clone(), camera );
-    //     var intersects = raycaster.intersectObject( TARGET );
-    //     for( var i = 0; i < intersects.length; i++ ) {
-    //       var intersection = intersects[ i ],
-    //       obj = intersection.object;
-    //       console.log("Intersected object", obj);
-    //     }
-    // }
-    // function onMouseDown(e) {
-    //     var vectorMouse = new THREE.Vector3( //vector from camera to mouse
-    //         -(window.innerWidth/2-e.clientX)*2/window.innerWidth,
-    //         (window.innerHeight/2-e.clientY)*2/window.innerHeight,
-    //         -1/Math.tan(22.5*Math.PI/180)); //22.5 is half of camera frustum angle 45 degree
-    //     vectorMouse.applyQuaternion(camera.quaternion);
-    //     vectorMouse.normalize();        
-    
-    //     var vectorObject = new THREE.Vector3(); //vector from camera to object
-    //     vectorObject.set(object.x - camera.position.x,
-    //                      object.y - camera.position.y,
-    //                      object.z - camera.position.z);
-    //     vectorObject.normalize();
-    //     if (vectorMouse.angleTo(vectorObject)*180/Math.PI < 1) {
-    //         //mouse's position is near object's position
-    
-    //     }
-    // }
+    }
 
 
     function onPointerMove( event ) {
@@ -352,31 +400,6 @@
     
     }
 
-    function moveMouseDisplay2(){
-        raycaster.setFromCamera( pointer, camera );
-        var intersects = raycaster.intersectObjects( scene.children,true ); 
-    
-        if ( intersects.length > 0 ) {
-            if(intersects[0].object.name == "Lowpoly_Notebook") notebookState = true;
-            if(intersects[0].object.name != "Lowpoly_Notebook") notebookState = false;
-
-            if (notebookState) {
-            // if (intersects[0].object.name == "Lowpoly_Notebook") {
-                $("#notebook-info").css( { display: "block" } );
-                $("#close-div").css( { display: "flex" } );
-            
-            }else{
-                $("#notebook-info").css( { display: "none" } );
-                $("#close-div").css( { display: "none" } );
-            }
-            if (intersects[0].object.name == "showcase") {
-                $("#notebook-info").css( { display: "none" } );
-                $("#close-div").css( { display: "none" } );
-            
-            }
-        }
-    }
-
     function moveMouseDisplay(){
         raycaster.setFromCamera( pointer, camera );
         var intersects = raycaster.intersectObjects( scene.children,true ); 
@@ -396,6 +419,52 @@
         }
     }
 
+    function onDocumentKeyDown(event) {
+        var keyCode = event.which;
+        // console.log('key : ', keyCode);
+        if (keyCode == 90) {   
+            // ******* z = 90 ********* //
+            console.log('z: 90');
+
+        } else if (keyCode == 88) {     
+            // ******* x = 88 ********* //
+            console.log('x: 88');
+            
+            
+        }else if (keyCode == 39) {     
+            // ******* >> = 39 ********* //
+            let tempObject2 = scene.getObjectByName( "groupMan" );
+            tempObject2.rotation.y += Math.PI / 2 /9;
+            console.log('tempObject2: ',tempObject2);
+
+        }else if (keyCode == 37) {     
+            // ******* << = 37 ********* //
+            let tempObject2 = scene.getObjectByName( "groupMan" );
+            tempObject2.rotation.y -= Math.PI / 2 /9;
+            
+        }else if (keyCode == 87) {     
+            // ******* w = 87 ********* //
+            let tempObject2 = scene.getObjectByName( "groupMan" );
+            tempObject2.position.z -= 5;
+            
+        }else if (keyCode == 83) {     
+            // ******* s = 83 ********* //
+            let tempObject2 = scene.getObjectByName( "groupMan" );
+            tempObject2.position.z += 5;
+            
+        }else if (keyCode == 65) {     
+            // ******* a = 65 ********* //
+            let tempObject2 = scene.getObjectByName( "groupMan" );
+            tempObject2.position.x -= 5;
+            
+        }else if (keyCode == 68) {     
+            // ******* d = 68 ********* //
+            let tempObject2 = scene.getObjectByName( "groupMan" );
+            tempObject2.position.x += 5;
+
+            
+        }
+    }
 
 
 
@@ -411,7 +480,7 @@
     //                                                         //
     // ******************************************************* //
     
-    function onDocumentKeyDown(event) {
+    function onDocumentKeyDown22(event) {
         var keyCode = event.which;
         // console.log('key : ', keyCode);
         if (keyCode == 90) {   
