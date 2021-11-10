@@ -47,8 +47,53 @@
     } );
 
 
+    // loader.load( './3dfile/rokokoman2.fbx', function ( object ) {
+    //     console.log('object',object);
+    //     object.animations[ 0 ].name ="idle";
+    //     animationArray.push( object.animations[ 0 ]);     
+    // } );
+
+
+    // async function loadSomething() {
+    //     return new Promise((resolve) => {
+            
+    //         const loader = new FBXLoader();
+    //         loader.load(
+    //             './3dfile/rokokoman2.fbx',
+    //           (object) => resolve(
+    //             console.log('object',object),
+    //             object.animations[ 0 ].name ="idle",
+    //             animationArray.push( object.animations[ 0 ])     
+    //           ),
+    //           () => resolve()
+    //         );
+    //       }
+    //       );
+    //   };
+    
+    async function modelLoader(url) {
+        return new Promise((resolve, reject) => {
+          loader.load(url, data=> resolve(data.animations[ 0 ]), null, reject);
+        });
+    }
+
+    async function mtlLoader(url) {
+        return new Promise((resolve, reject) => {
+          new THREE.TextureLoader().load(url, data=> resolve(data), null, reject);
+        });
+    }
+  
+
+
     init();
     animate();
+
+        
+ 
+    
+
+
+    
 
     function init() {
 
@@ -104,45 +149,63 @@
         const group3 = new THREE.Group();
         const group4 = new THREE.Group();
 
-        
-        loader.load( './3dfile/man.fbx', function ( object ) {
-            // **** texture loading **** //
-            const man_txt = new THREE.TextureLoader().load('./pics/man.jpg');
-            man_txt.flipY = true; // we flip the texture so that its the right way up
-            const man_mtl = new THREE.MeshPhongMaterial({
-                map: man_txt,
-                color: 0xffffff,
-                skinning: true
-            });
+        async function manLoad(){
+                // const animationsRokoko = await modelLoader('./3dfile/Taunt.fbx');
+                // const animationsRokoko = await modelLoader('./3dfile/rokokoman3.fbx');
+                // const animationsRokoko = await modelLoader('./3dfile/rokokoman2.fbx');
+                
+                const animationsRokoko = await modelLoader('./3dfile/man_Idle.fbx');
+                const man_txt = await mtlLoader('./pics/man.jpg');
 
-            mixer = new THREE.AnimationMixer( object );
-            // action = mixer.clipAction( object.animations[0] );
-            console.log(animationArray);
-            action = mixer.clipAction( animationArray.find(item=>item.name=='idle') );
-            console.log('action : ', action);
-            
-            action.play();
-            object.traverse( function ( child ) {
-                if ( child.isMesh ) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                    child.material = man_mtl;
-                }
-            } );
-            object.scale.multiplyScalar(0.65); 
-            
-            console.log(object.name);
-            // scene.add( object );
-            group.add( object );
-        } );
+                loader.load( './3dfile/man.fbx', function ( object ) {
+                // loader.load( './3dfile/remy.fbx', function ( object ) {
+                    // **** texture loading **** //
+                    // const man_txt = new THREE.TextureLoader().load('./pics/man.jpg');
+                    man_txt.flipY = true; // we flip the texture so that its the right way up
+                    const man_mtl = new THREE.MeshPhongMaterial({
+                        map: man_txt,
+                        color: 0xffffff,
+                        skinning: true
+                    });
+
+ 
+                    mixer = new THREE.AnimationMixer( object );
+                    // action = mixer.clipAction( object.animations[0] );
+                    console.log(animationArray);
+                    console.log('animationsRokoko ', animationsRokoko);
+                    action = mixer.clipAction( animationsRokoko);
+                    // action = mixer.clipAction( animationArray.find(item=>item.name=='idle') );
+                    console.log('action : ', action);
+                    
+                    action.play();
+                    object.traverse( function ( child ) {
+                        if ( child.isMesh ) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                            child.material = man_mtl;
+                        }
+                    } );
+                    object.scale.multiplyScalar(0.65); 
+                    
+                    console.log(object.name);
+                    // scene.add( object );
+                    group.add( object );
+                } );
 
 
-        group.name = "groupMan";
-        scene.add( group );
+                group.name = "groupMan";
+                scene.add( group );
 
-        let tempObject2 = scene.getObjectByName( "groupMan" );
-        tempObject2.position.z += 130;
-        tempObject2.position.x -= 50;
+                let tempObject2 = scene.getObjectByName( "groupMan" );
+                tempObject2.position.z += 130;
+                tempObject2.position.x -= 50;
+                // tempObject2.position.y -= 150;
+        }
+
+        manLoad().catch(error => {
+            console.error(error);
+        });
+
 
 
 
@@ -237,7 +300,7 @@
                     // child.material = man_mtl;
                 }
             } );
-            object.scale.multiplyScalar(0.65);    
+            object.scale.multiplyScalar(0.15);    
             console.log(object.name);
 
             group4.add( object );
@@ -289,6 +352,8 @@
         
     }
 
+    
+
     function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
@@ -338,7 +403,7 @@
             mixer.update( delta );}
         if (b_mixer) {
             // console.log('b_mixer',b_mixer);
-            b_mixer.update( delta2 *3000);
+            b_mixer.update( delta2 *2400);
             // b_action.pause();
             // console.log('delta20', delta2);
             // console.log('b_action : ', b_action);
